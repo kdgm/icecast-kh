@@ -1,4 +1,4 @@
-AC_INIT([Icecast], [2.3.3-kdgm9], [karl@xkheyes.plus.com])
+AC_INIT([Icecast], [2.3.3-kdgm10], [karl@xkheyes.plus.com])
 
 LT_INIT
 AC_PREREQ(2.59)
@@ -64,7 +64,7 @@ AC_CHECK_TYPES([uint32_t], [], [], [
 #include <inttypes.h>
 #include <stdint.h>
 ])
-if test "x$ac_cv_func_fnmatch" != "xyes" 
+if test "x$ac_cv_func_fnmatch" != "xyes"
 then
 AC_CHECK_LIB(fnmatch, fnmatch, [XIPH_VAR_APPEND([XIPH_LIBS],["-lfnmatch"])],
         [ AC_CHECK_LIB(iberty, fnmatch, [XIPH_VAR_APPEND([XIPH_LIBS],["-liberty"])],
