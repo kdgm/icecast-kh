@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT([Icecast], [2.4.0-kh6], [karl@kheyes.plus.com])
+AC_INIT([Icecast], [2.4.0-kdgm2], [karl@kheyes.plus.com])
 AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE([foreign])
 
@@ -69,7 +69,7 @@ AC_CHECK_TYPES([SOCKET*],
         [AC_DEFINE([FD_t], [int], [socket type for the rest])], [
 #include <winsock2.h>
 ])
-if test "x$ac_cv_func_fnmatch" != "xyes" 
+if test "x$ac_cv_func_fnmatch" != "xyes"
 then
 AC_CHECK_LIB(fnmatch, fnmatch, [XIPH_VAR_APPEND([XIPH_LIBS],["-lfnmatch"])],
         [ AC_CHECK_LIB(iberty, fnmatch, [XIPH_VAR_APPEND([XIPH_LIBS],["-liberty"])],
