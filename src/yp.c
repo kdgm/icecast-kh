@@ -311,7 +311,7 @@ void yp_recheck_config (ice_config_t *config)
     client_limit = config->client_limit;
     free ((char*)server_version);
     server_version = strdup (config->server_id);
-    /* for each yp url in config, check to see if one exists 
+    /* for each yp url in config, check to see if one exists
        if not, then add it. */
     for (i=0 ; i < config->num_yp_directories; i++)
     {
@@ -390,7 +390,7 @@ static int send_to_yp (const char *cmd, ypdata_t *yp, char *post)
     if (curlcode)
     {
         yp->process = do_yp_add;
-        yp_schedule (yp, 1200);
+        yp_schedule (yp, 5);
         ERROR3 ("connection to %s failed on %s with \"%s\"", server->url, yp->mount, server->curl_error);
         return -2;
     }
@@ -401,7 +401,7 @@ static int send_to_yp (const char *cmd, ypdata_t *yp, char *post)
         if (yp->process == do_yp_add)
         {
             ERROR4 ("YP %s on %s failed for %s: %s", cmd, server->url, yp->mount, yp->error_msg);
-            yp_schedule (yp, 7200);
+            yp_schedule (yp, 5);
         }
         if (yp->process == do_yp_touch)
         {
@@ -412,7 +412,7 @@ static int send_to_yp (const char *cmd, ypdata_t *yp, char *post)
              * cases as a firewall block or incorrect listenurl.
              */
             if (yp->touch_interval < 1200)
-                yp_schedule (yp, 1200);
+                yp_schedule (yp, 5);
             else
                 yp_schedule (yp, yp->touch_interval);
             INFO4 ("YP %s on %s failed for %s: %s", cmd, server->url, yp->mount, yp->error_msg);
@@ -490,7 +490,7 @@ static int do_yp_add (ypdata_t *yp, char *s, unsigned len)
     if (value == NULL || strcasecmp (value, "Unspecified name") == 0)
     {
         INFO1 ("mount %s requires valid name", yp->mount);
-        yp_schedule (yp, 600);
+        yp_schedule (yp, 5);
         free (value);
         return 0;
     }
@@ -529,7 +529,7 @@ static int do_yp_add (ypdata_t *yp, char *s, unsigned len)
     if (yp->server_name[0] == 0 || yp->server_genre[0] == 0 || yp->server_type[0] == 0 || yp->bitrate[0] == 0)
     {
         INFO1 ("mount %s requires stats (sn, genre, type, bitrate)", yp->mount);
-        yp_schedule (yp, 600);
+        yp_schedule (yp, 5);
         return -1;
     }
     ret = snprintf (s, len, "action=add&sn=%s&genre=%s&cpswd=%s&desc="
@@ -559,7 +559,7 @@ static int do_yp_touch (ypdata_t *yp, char *s, unsigned len)
     if (yp->sid == NULL) // odd case, go back to add, try get another sid.
     {
         yp->process = do_yp_touch;
-        yp_schedule (yp, 60);
+        yp_schedule (yp, 5);
     }
     val = (char *)stats_get_value (yp->mount, "listeners");
     if (val)
@@ -1082,7 +1082,7 @@ static void yp_touch_callback (yp_change_t *yp_change)
                 if (yp->next_update - now > 30)
                 {
                     if (now - 30 < yp->next_update - yp->touch_interval)
-                        yp_schedule (yp, 30);
+                        yp_schedule (yp, 5);
                     else
                         yp_schedule (yp, 0);
                 }
