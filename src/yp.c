@@ -559,7 +559,7 @@ static int do_yp_touch (ypdata_t *yp, char *s, unsigned len)
         if (yp->sid == NULL) // go back to add, try get another sid.
         {
             yp->process = do_yp_add;
-            yp_schedule (yp, 60);
+            yp_schedule (yp, 0);
             return 0;
         }
         int max_listeners = 1;
