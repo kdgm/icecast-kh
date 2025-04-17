@@ -386,6 +386,7 @@ static int send_to_yp (const char *cmd, ypdata_t *yp, char *post)
     yp->cmd_ok = 0;
     curl_easy_setopt (server->curl, CURLOPT_POSTFIELDS, post);
     curl_easy_setopt (server->curl, CURLOPT_WRITEHEADER, yp);
+    curl_easy_setopt (server->curl, CURLOPT_FAILONERROR, 1L);
     curlcode = curl_easy_perform (server->curl);
     if (curlcode)
     {

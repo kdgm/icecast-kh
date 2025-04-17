@@ -415,6 +415,7 @@ static auth_result url_remove_listener (auth_client *auth_user)
 #endif
 
     DEBUG2 ("...handler %d (%s) sending request", auth_user->handler, auth_user->mount);
+    curl_easy_setopt (atd->curl, CURLOPT_FAILONERROR, 1L);
     if (curl_easy_perform (atd->curl))
     {
         WARN3 ("auth to server %s (%s) failed with \"%s\"", url->removeurl, auth_user->mount, atd->errormsg);
@@ -540,6 +541,7 @@ static auth_result url_add_listener (auth_client *auth_user)
     client->aux_data = (uintptr_t)&intro;
 
     DEBUG2 ("handler %d (%s) sending request", auth_user->handler, auth_user->mount);
+    curl_easy_setopt (atd->curl, CURLOPT_FAILONERROR, 1L);
     res = curl_easy_perform (atd->curl);
     DEBUG2 ("handler %d (%s) request finished", auth_user->handler, auth_user->mount);
     client->aux_data = (uintptr_t)0;
@@ -638,6 +640,7 @@ static void url_stream_start (auth_client *auth_user)
     curl_easy_setopt (atd->curl, CURLOPT_WRITEDATA, auth_user);
 
     DEBUG2 ("handler %d (%s) sending request", auth_user->handler, auth_user->mount);
+    curl_easy_setopt (atd->curl, CURLOPT_FAILONERROR, 1L);
     if (curl_easy_perform (atd->curl))
         WARN3 ("auth to server %s (%s) failed with %s", url->stream_start, auth_user->mount, atd->errormsg);
     else
@@ -678,6 +681,7 @@ static void url_stream_end (auth_client *auth_user)
     curl_easy_setopt (atd->curl, CURLOPT_WRITEDATA, auth_user);
 
     DEBUG2 ("handler %d (%s) sending request", auth_user->handler, auth_user->mount);
+    curl_easy_setopt (atd->curl, CURLOPT_FAILONERROR, 1L);
     if (curl_easy_perform (atd->curl))
         WARN3 ("auth to server %s (%s) failed with %s", url->stream_end, auth_user->mount, atd->errormsg);
     else
@@ -723,6 +727,7 @@ static void url_stream_auth (auth_client *auth_user)
     curl_easy_setopt (atd->curl, CURLOPT_POSTFIELDS, rb->data);
     auth_user->flags &= ~CLIENT_AUTHENTICATED;
     DEBUG3 ("handler %d (%s) sending request (adm %d)", auth_user->handler, auth_user->mount, adm);
+    curl_easy_setopt (atd->curl, CURLOPT_FAILONERROR, 1L);
     if (curl_easy_perform (atd->curl))
         WARN3 ("auth to server %s (%s) failed with %s", url->stream_auth, auth_user->mount, atd->errormsg);
     refbuf_release (rb);

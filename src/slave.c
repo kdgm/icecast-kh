@@ -1079,6 +1079,7 @@ static void *streamlist_thread (void *arg)
 
     master->ok = 0;
     master->synctime = time(NULL);
+    curl_easy_setopt (handle, CURLOPT_FAILONERROR, 1L);
     if (curl_easy_perform (handle) != 0 || master->ok == 0)
     {
         /* fall back to traditional request */
@@ -1086,6 +1087,7 @@ static void *streamlist_thread (void *arg)
         snprintf (url, sizeof (url), "%s://%s:%d/admin/streamlist.txt%s",
                 protocol, master->server, port, master->args);
         curl_easy_setopt (handle, CURLOPT_URL, url);
+        curl_easy_setopt (handle, CURLOPT_FAILONERROR, 1L);
         if (curl_easy_perform (handle) != 0)
             WARN2 ("Failed URL access \"%s\" (%s)", url, error);
     }
