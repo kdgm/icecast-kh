@@ -2043,23 +2043,21 @@ static void source_apply_mount (source_t *source, ice_config_t *config, mount_pr
         source->yp_public = val;
     }
 
-    /* stream name */
-    if (mountinfo && mountinfo->stream_name)
-        stats_set (source->stats, "server_name", mountinfo->stream_name);
-    else
-    {
-        do {
-            str = httpp_getvar (parser, "ice-name");
-            if (str) break;
-            str = httpp_getvar (parser, "icy-name");
-            if (str) break;
-            str = httpp_getvar (parser, "x-audiocast-name");
-            if (str) break;
+    /* stream name - source headers take precedence, config is fallback */
+    do {
+        str = httpp_getvar (parser, "ice-name");
+        if (str) break;
+        str = httpp_getvar (parser, "icy-name");
+        if (str) break;
+        str = httpp_getvar (parser, "x-audiocast-name");
+        if (str) break;
+        if (mountinfo && mountinfo->stream_name)
+            str = mountinfo->stream_name;
+        else
             str = "Unspecified name";
-        } while (0);
-        if (source->format)
-            stats_set_conv (source->stats, "server_name", str, source->format->charset);
-    }
+    } while (0);
+    if (source->format)
+        stats_set_conv (source->stats, "server_name", str, source->format->charset);
 
     /* stream description */
     if (mountinfo && mountinfo->stream_description)
